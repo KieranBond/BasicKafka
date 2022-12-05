@@ -2,7 +2,7 @@ SHELL := /bin/bash
 
 .SILENT:
 
-.PHONY: run
+.PHONY: kafka
 
-run: 
+kafka: 
 	@docker-compose up
