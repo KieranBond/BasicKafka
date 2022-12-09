@@ -1,12 +1,9 @@
 ﻿using Confluent.Kafka;
+using System.ComponentModel;
 
-var producerConfig = new ProducerConfig() 
-{ 
-    BootstrapServers = "localhost:9092"
-};
 var consumerConfig = new ConsumerConfig()
 {
-    BootstrapServers = producerConfig.BootstrapServers,
+    BootstrapServers = "localhost:9092",
     GroupId = "BasicKafka",
     AutoOffsetReset = AutoOffsetReset.Earliest,
 };
@@ -14,33 +11,35 @@ var consumerConfig = new ConsumerConfig()
 Console.WriteLine("Kafka topic: ");
 var topic = Console.ReadLine();
 
-var producerBuilder = new ProducerBuilder<Null, string>(producerConfig);
-using var producer = producerBuilder.Build();
-
-var consumerBuilder = new ConsumerBuilder<string, string>(consumerConfig);
+var consumerBuilder = new ConsumerBuilder<string, int>(consumerConfig);
 using var consumer = consumerBuilder.Build();
 
 consumer.Subscribe(topic);
 
-for ( int i = 0; i < 5; i++ )
-{
-    Console.WriteLine("Input: ");
-    var input = Console.ReadLine();
-    if (input == null) continue;
-
-    await producer.ProduceAsync(topic, new Message<Null, string> { Value = input });
-}
-
-Console.Clear();
 Console.WriteLine($"Consuming for topic '{topic}'\n");
 
-string? value;
-do
+var cancelTokenSource = new CancellationTokenSource();
+Console.CancelKeyPress += (_, e) =>
 {
-    var output = consumer.Consume( TimeSpan.FromSeconds(5) );
-    value = output?.Message?.Value;
-    var key = output?.Message?.Key;
-    var timestamp = output?.Message?.Timestamp;
-    if( value != null ) Console.WriteLine($"Timestamp: {timestamp?.UtcDateTime ?? DateTime.UnixEpoch}\nKey: {key}, \nValue: {value}\n\n");
+    e.Cancel = true;
+    cancelTokenSource.Cancel();
+};
+
+int? value;
+try
+{
+    do
+    {
+        var result = consumer.Consume( cancelTokenSource.Token );
+        value = result?.Message?.Value;
+        var key = result?.Message?.Key;
+        var timestamp = result?.Message?.Timestamp;
+        if( value != null ) Console.WriteLine($"Timestamp: {timestamp?.UtcDateTime ?? DateTime.UnixEpoch}\nKey: {key}, \nValue: {value}\n\n");
+    }
+    while ( true );
 }
-while ( value != null );
+catch { }
+finally
+{
+    consumer.Close();
+}

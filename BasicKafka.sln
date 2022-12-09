@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasicKafka", "BasicKafka\BasicKafka.csproj", "{02316B43-6BB3-4074-B8CD-645542789ABE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasicKafka", "BasicKafka\BasicKafka.csproj", "{02316B43-6BB3-4074-B8CD-645542789ABE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasicApi", "gRPCContract\BasicApi.csproj", "{3921F090-AB76-48DD-81EA-CDD615EB3C20}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{02316B43-6BB3-4074-B8CD-645542789ABE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02316B43-6BB3-4074-B8CD-645542789ABE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02316B43-6BB3-4074-B8CD-645542789ABE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3921F090-AB76-48DD-81EA-CDD615EB3C20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3921F090-AB76-48DD-81EA-CDD615EB3C20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3921F090-AB76-48DD-81EA-CDD615EB3C20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3921F090-AB76-48DD-81EA-CDD615EB3C20}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
