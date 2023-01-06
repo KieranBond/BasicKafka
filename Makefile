@@ -6,3 +6,6 @@ SHELL := /bin/bash
 
 kafka: 
 	@docker-compose up
+	
+kafka-build: 
+	@docker-compose up --force-recreate

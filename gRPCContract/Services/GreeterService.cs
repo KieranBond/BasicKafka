@@ -1,3 +1,4 @@
+using BasicApi.Consumers;
 using BasicApi.Producers;
 using Grpc.Core;
 using gRPCContract;
@@ -9,12 +10,14 @@ namespace gRPCContract.Services
         private readonly Random _random;
         private readonly ILogger<GreeterService> _logger;
         private readonly GreeterProducer _producer;
+        private readonly GreeterConsumer _consumer;
 
-        public GreeterService(ILogger<GreeterService> logger, GreeterProducer producer)
+        public GreeterService(ILogger<GreeterService> logger, GreeterProducer producer, GreeterConsumer consumer)
         {
             _random = new Random();
             _logger = logger;
             _producer = producer;
+            _consumer = consumer;
         }
 
         public override Task<HelloReply> SayHello(HelloRequest request, ServerCallContext context)
@@ -37,6 +40,18 @@ namespace gRPCContract.Services
             {
                 Message = $"Hello {request.Name}"
             });
+        }
+
+        public override async Task ReceiveHello(Empty _, IServerStreamWriter<GreeterResult> responseStream, ServerCallContext context)
+        {
+            while(!context.CancellationToken.IsCancellationRequested)
+            {
+                var consumedResult = await _consumer.Consume();
+
+                _logger.LogInformation("{ConsumedResult} from Kafka", consumedResult);
+
+                await responseStream.WriteAsync(consumedResult);
+            }
         }
     }
 }

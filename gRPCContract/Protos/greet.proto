@@ -7,6 +7,7 @@ package greet;
 service Greeter {
   // Sends a greeting
   rpc SayHello (HelloRequest) returns (HelloReply);
+  rpc ReceiveHello(Empty) returns (stream GreeterResult);
 }
 
 // The request message containing the user's name.
@@ -18,3 +19,10 @@ message HelloRequest {
 message HelloReply {
   string message = 1;
 }
+
+message GreeterResult {
+	string key = 1;
+	int32 value = 2;
+}
+
+message Empty {}

@@ -1,3 +1,4 @@
+using BasicApi.Consumers;
 using BasicApi.Producers;
 using Confluent.Kafka;
 using gRPCContract.Services;
@@ -19,8 +20,17 @@ var producerConfig = new ProducerConfig()
     BootstrapServers = "localhost:9092"
 };
 
+var consumerConfig = new ConsumerConfig()
+{
+    BootstrapServers = "localhost:9092",
+    GroupId = "BasicKafka",
+    AutoOffsetReset = AutoOffsetReset.Earliest,
+};
+
 builder.Services.AddSingleton(new ProducerBuilder<string, int>(producerConfig));
+builder.Services.AddSingleton(new ConsumerBuilder<string, int>(consumerConfig));
 builder.Services.AddSingleton<GreeterProducer>();
+builder.Services.AddSingleton<GreeterConsumer>();
 
 var app = builder.Build();
 
